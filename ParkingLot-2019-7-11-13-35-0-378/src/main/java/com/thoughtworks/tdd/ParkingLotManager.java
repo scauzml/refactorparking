@@ -8,12 +8,10 @@ import java.util.List;
 public class ParkingLotManager {
     private List<ParkingBoy> parkingBoys = new ArrayList<ParkingBoy>();
     private List<ParkingLot> parkingLotList=new ArrayList<ParkingLot>();
-   private  String errorMessage;
-
-
+    private  String errorMessage;
+    private ParkingLot currentParingLot=null;
     public ParkingLotManager() {
     }
-
     public ParkingLotManager(List<ParkingLot> parkingLotList) {
         this.parkingLotList = parkingLotList;
     }
@@ -22,7 +20,6 @@ public class ParkingLotManager {
         this.parkingBoys=parkingBoyList;
         this.parkingLotList=parkingLots;
     }
-
     public List<ParkingLot> getParkingLotList() {
         return parkingLotList;
     }
@@ -86,87 +83,101 @@ public class ParkingLotManager {
         }
     }
     public ParkTicket park(Car car) {
-
         ParkTicket parkTicket =null;
-
         if (car != null) {
-            //查找car是否已经停过
-
-            boolean isParkedCar = false;
-            for (ParkingLot e:this.parkingLotList
-            ) {
-                isParkedCar= e.isContainCar(car);
-
-            }
+            boolean isParkedCar = isParkedCar(car);
             if (!isParkedCar) {
-                ParkingLot currentParingLot=null;
-                boolean isCapacityEnough = false;
-                for (ParkingLot e1:this.parkingLotList
-                ) {
-                    isCapacityEnough=e1.isCapacityEnough();
-                    if (isCapacityEnough) {
-                        currentParingLot=e1;
-                        break;
-                    }
-                }
-
+                boolean isCapacityEnough = isCapacityEnough();
                 if (isCapacityEnough) {
-//                    if (this.name == ParingBoyName.SMART_PARKING_BOY.getValue()) {
-//                        currentParingLot = findMoreEmptyOptionParkingLOt();
-//                    }else if(this.name == ParingBoyName.SUPER_SMART_PARKING_BOY.getValue()){
-//                        currentParingLot=findLargerPositonRatePraringLot();
-//                    }
                     parkTicket=new ParkTicket();
-                    //关联ticket,与car,而且停车场添加ticket
                     parkTicket.setCarNumber(car.getCarNumber());
-                    currentParingLot.addParTicket(parkTicket);
-                    currentParingLot.addCar(car);
+                    addParkTicketAndCarIntoLot(car, parkTicket);
                 }else {
                     this.errorMessage= ErrorMessage.NOT_ENOUGH_CAPACITY_MESSAGE.getValue();
                 }
-
-
             }
-
         }
-
-
         return parkTicket;
     }
+
+    public void addParkTicketAndCarIntoLot(Car car, ParkTicket parkTicket) {
+        currentParingLot.addParTicket(parkTicket);
+        currentParingLot.addCar(car);
+    }
+
+    public boolean isCapacityEnough() {
+        boolean isCapacityEnough = false;
+        for (ParkingLot e1:this.parkingLotList
+        ) {
+            isCapacityEnough=e1.isCapacityEnough();
+            if (isCapacityEnough) {
+                setCurrentParkingLot(e1);
+                break;
+            }
+        }
+        return isCapacityEnough;
+    }
+
+    public boolean isParkedCar(Car car) {
+        boolean isParkedCar = false;
+        for (ParkingLot e:this.parkingLotList
+        ) {
+            isParkedCar= e.isContainCar(car);
+        }
+        return isParkedCar;
+    }
+
     public Car fetchRightCar(ParkTicket parkTicket) {
         Car car=null;
-        //验证pakTicket是wrong
         if (parkTicket != null) {
-            boolean isRightTicket=false;
-            ParkingLot currentParkingLot=null;
-            for (ParkingLot p :this.parkingLotList) {
-                isRightTicket=p.isContainParkTicket(parkTicket);
-                if (isRightTicket) {
-                    currentParkingLot=p;
-                    break;
-                }
-            }
-
+            boolean isRightTicket = isRightTicket(parkTicket);
             if (isRightTicket) {
                 if (!parkTicket.isUsed()) {
-                    //没有被使用则获取正确car
-
-                    car= currentParkingLot.getCars().stream().
-                            filter(e->e.getCarNumber()==parkTicket.getCarNumber()).findFirst().get();
-                    currentParkingLot.getCars().remove(car);
-                    parkTicket.setUsed(true);
-
+                    car = getCar(parkTicket);
+                    removeCarFromLot(car);
+                    changeParkTicketUseStatus(parkTicket);
                 }else {
                     this.errorMessage= ErrorMessage.WRONG_TICKET_MESSAGE.getValue();
                 }
             }else {
                 this.errorMessage= ErrorMessage.WRONG_TICKET_MESSAGE.getValue();
             }
-
         }else {
             this.errorMessage=ErrorMessage.NOT_PROVIDE_TOKET_MESSAGE.getValue();
         }
 
         return car;
+    }
+
+    public void changeParkTicketUseStatus(ParkTicket parkTicket) {
+        parkTicket.setUsed(true);
+    }
+
+    public void removeCarFromLot(Car car) {
+        this.currentParingLot.getCars().remove(car);
+    }
+
+    public Car getCar(ParkTicket parkTicket) {
+        Car car;
+        car=  this.currentParingLot.getCars().stream().
+                filter(e->e.getCarNumber()==parkTicket.getCarNumber()).findFirst().get();
+        return car;
+    }
+
+    public boolean isRightTicket(ParkTicket parkTicket) {
+        boolean isRightTicket=false;
+        setCurrentParkingLot(null);
+        for (ParkingLot p :this.parkingLotList) {
+            isRightTicket=p.isContainParkTicket(parkTicket);
+            if (isRightTicket) {
+                setCurrentParkingLot(p);
+                break;
+            }
+        }
+        return isRightTicket;
+    }
+
+    public void setCurrentParkingLot(ParkingLot p) {
+        this.currentParingLot = p;
     }
 }
