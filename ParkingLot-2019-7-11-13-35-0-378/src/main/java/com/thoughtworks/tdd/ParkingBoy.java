@@ -113,30 +113,35 @@ public class ParkingBoy {
 
     public Car fetchRightCar(ParkTicket parkTicket) {
         Car car=null;
-        //验证pakTicket是wrong
         if (parkTicket != null) {
             boolean isRightTicket = isRightTicket(parkTicket);
             if (isRightTicket) {
                 if (!parkTicket.isUsed()) {
-                    //没有被使用则获取正确car
-
-                   car= currentParkingLot.getCars().stream().
-                           filter(e->e.getCarNumber()==parkTicket.getCarNumber()).findFirst().get();
-                   currentParkingLot.getCars().remove(car);
-                  parkTicket.setUsed(true);
-
+                    car= getCar(parkTicket);
+                    removeCarFromParkingLot(car);
+                    changeTicktStatus(parkTicket);
                 }else {
                     this.errorMessage= ErrorMessage.WRONG_TICKET_MESSAGE.getValue();
                 }
             }else {
                 this.errorMessage= ErrorMessage.WRONG_TICKET_MESSAGE.getValue();
             }
-
         }else {
             this.errorMessage=ErrorMessage.NOT_PROVIDE_TOKET_MESSAGE.getValue();
         }
-
         return car;
+    }
+
+    public void changeTicktStatus(ParkTicket parkTicket) {
+        parkTicket.setUsed(true);
+    }
+
+    public void removeCarFromParkingLot(Car car) {
+        this.currentParingLot.getCars().remove(car);
+    }
+
+    public Car getCar(ParkTicket parkTicket) {
+        return this.currentParingLot.getCars().stream().filter(e->e.getCarNumber()==parkTicket.getCarNumber()).findFirst().get();
     }
 
     public boolean isRightTicket(ParkTicket parkTicket) {
