@@ -53,7 +53,8 @@ public class ParkingLotManager {
 
 
     public ParkTicket specifyBoyToPark(String parkingBoyname, Car car) {
-        ParkingBoy parkingBoy=this.getParkingBoys().stream().filter(e->e.getParkingBoyName()==parkingBoyname).map(e->(e)).findFirst().get();
+        ParkingBoy parkingBoy = getSpecifyParkingBoy(parkingBoyname);
+
         if (parkingBoy == null) {
             return null;
         }
@@ -66,13 +67,17 @@ public class ParkingLotManager {
             return null;
         }
     }
+
+    public ParkingBoy getSpecifyParkingBoy(String parkingBoyname) {
+        return this.getParkingBoys().stream().filter(e -> e.getParkingBoyName() == parkingBoyname).map(e -> (e)).findFirst().get();
+    }
+
     public Car specifyBoyTofetch(String parkingBoyname, ParkTicket parkTicket) {
-        ParkingBoy parkingBoy=this.getParkingBoys().stream().filter(e->e.getParkingBoyName()==parkingBoyname).map(e->(e)).findFirst().get();
+        ParkingBoy parkingBoy = getSpecifyParkingBoy(parkingBoyname);
         if (parkingBoy == null) {
             return null;
         }
         Car car = parkingBoy.fetchRightCar(parkTicket);
-
         if (car != null) {
             return car;
         }else {

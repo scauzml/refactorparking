@@ -20,7 +20,6 @@ public class ParkingBoyTest {
         Car car = new Car("333");
         //when
         ParkTicket parkTicket=parkingBoy.park(car);
-
         //then
         ParkTicket parkTicket1 = new ParkTicket();
         parkTicket1.setCarNumber(car.getCarNumber());

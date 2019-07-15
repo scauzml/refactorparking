@@ -35,7 +35,6 @@ public class ParkingBoy {
     public String getErrorMessage() {
         return errorMessage;
     }
-
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
@@ -80,7 +79,6 @@ public class ParkingBoy {
 
     public boolean isCapacityEnough() {
         boolean isCapacityEnough = false;
-
         for (ParkingLot e1:this.parkingLotList
             ) {
                 isCapacityEnough=e1.isCapacityEnough();
