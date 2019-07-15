@@ -11,8 +11,8 @@ public class ParkingLotTest {
     @Test
     public void should_return_true_when_add_a_car() {
         //given
-        ParkingLot parlingLot=new ParkingLot();
-        Car car = new Car();
+        ParkingLot parlingLot=new ParkingLot(10);
+        Car car = new Car("333");
         //when
         boolean isSuccess=parlingLot.addCar(car);
         //then
