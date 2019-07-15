@@ -11,6 +11,7 @@ public class ParkingBoy {
      private List<ParkingLot> parkingLotList;
      private String errorMessage;
      private String parkingBoyName;
+     private ParkingLot currentParingLot=null;
     public ParkingBoy(List<ParkingLot> parkingLotList, String parkingBoyName) {
         this.parkingLotList = parkingLotList;
         this.parkingBoyName = parkingBoyName;
@@ -50,17 +51,7 @@ public class ParkingBoy {
         if (car != null) {
             boolean isParkedCar = isParkedCar(car);
             if (!isParkedCar) {
-                ParkingLot currentParingLot=null;
-                boolean isCapacityEnough = false;
-                for (ParkingLot e1:this.parkingLotList
-                    ) {
-                        isCapacityEnough=e1.isCapacityEnough();
-                        if (isCapacityEnough) {
-                            currentParingLot=e1;
-                            break;
-                        }
-                    }
-
+                boolean isCapacityEnough = isCapacityEnough();
                 if (isCapacityEnough) {
                     if (this.parkingBoyName == ParingBoyName.SMART_PARKING_BOY.getValue()) {
                         currentParingLot = findMoreEmptyOptionParkingLOt();
@@ -83,6 +74,20 @@ public class ParkingBoy {
 
 
         return parkTicket;
+    }
+
+    public boolean isCapacityEnough() {
+        boolean isCapacityEnough = false;
+
+        for (ParkingLot e1:this.parkingLotList
+            ) {
+                isCapacityEnough=e1.isCapacityEnough();
+                if (isCapacityEnough) {
+                    this.currentParingLot=e1;
+                    break;
+                }
+            }
+        return isCapacityEnough;
     }
 
     public boolean isParkedCar(Car car) {
