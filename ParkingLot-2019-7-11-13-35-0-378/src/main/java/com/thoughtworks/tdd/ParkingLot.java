@@ -15,9 +15,7 @@ public class ParkingLot {
 
     public void setParkTicketList(List<ParkTicket> parkTicketList) {
         this.parkTicketList = parkTicketList;
-
     }
-
 
     public double getPositionrate() {
         return positionrate;
@@ -43,7 +41,6 @@ public class ParkingLot {
         this.allowance=capacity;
         this.positionrate=this.allowance/this.capacity;
     }
-
     public int getCapacity() {
         return capacity;
     }
@@ -80,9 +77,9 @@ public class ParkingLot {
     }
 
     public boolean isContainParkTicket(ParkTicket parkTicket) {
-
        return this.parkTicketList.contains(parkTicket);
     }
+
     public boolean isContainCar(Car car) {
 
         return this.cars.contains(car);

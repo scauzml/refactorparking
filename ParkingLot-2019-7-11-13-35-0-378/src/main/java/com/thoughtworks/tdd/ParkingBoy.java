@@ -60,13 +60,8 @@ public class ParkingBoy {
                 }else {
                     this.errorMessage=ErrorMessage.NOT_ENOUGH_CAPACITY_MESSAGE.getValue();
                 }
-
-
             }
-
         }
-
-
         return parkTicket;
     }
 
@@ -120,16 +115,7 @@ public class ParkingBoy {
         Car car=null;
         //验证pakTicket是wrong
         if (parkTicket != null) {
-            boolean isRightTicket=false;
-            ParkingLot currentParkingLot=null;
-            for (ParkingLot p :this.parkingLotList) {
-                isRightTicket=p.isContainParkTicket(parkTicket);
-                if (isRightTicket) {
-                    currentParkingLot=p;
-                    break;
-                }
-            }
-
+            boolean isRightTicket = isRightTicket(parkTicket);
             if (isRightTicket) {
                 if (!parkTicket.isUsed()) {
                     //没有被使用则获取正确car
@@ -153,6 +139,19 @@ public class ParkingBoy {
         return car;
     }
 
+    public boolean isRightTicket(ParkTicket parkTicket) {
+        boolean isRightTicket=false;
+        this.currentParingLot=null;
+        for (ParkingLot p :this.parkingLotList) {
+            isRightTicket=p.isContainParkTicket(parkTicket);
+            if (isRightTicket) {
+                this.currentParingLot=p;
+                break;
+            }
+        }
+        return isRightTicket;
+    }
+
     public ParkingLot findMoreEmptyOptionParkingLOt() {
 
         return this.parkingLotList.stream().max(Comparator.comparingInt(ParkingLot::getAllowance)).get();
@@ -160,8 +159,6 @@ public class ParkingBoy {
     }
 
     public ParkingLot findLargerPositonRatePraringLot() {
-
         return this.parkingLotList.stream().max(Comparator.comparingDouble(ParkingLot::getPositionrate)).get();
     }
-
 }
