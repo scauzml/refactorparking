@@ -11,13 +11,10 @@ public class ParkingBoy {
      private List<ParkingLot> parkingLotList;
      private String errorMessage;
      private String parkingBoyName;
-
-
     public ParkingBoy(List<ParkingLot> parkingLotList, String parkingBoyName) {
         this.parkingLotList = parkingLotList;
         this.parkingBoyName = parkingBoyName;
     }
-
     public String getParkingBoyName() {
         return parkingBoyName;
     }
@@ -48,17 +45,10 @@ public class ParkingBoy {
 
     public ParkingBoy() {
     }
-
     public ParkTicket park(Car car) {
         ParkTicket parkTicket =null;
         if (car != null) {
-            //查找car是否已经停过
-            boolean isParkedCar = false;
-            for (ParkingLot e:this.parkingLotList
-                 ) {
-                isParkedCar= e.isContainCar(car);
-
-            }
+            boolean isParkedCar = isParkedCar(car);
             if (!isParkedCar) {
                 ParkingLot currentParingLot=null;
                 boolean isCapacityEnough = false;
@@ -93,6 +83,16 @@ public class ParkingBoy {
 
 
         return parkTicket;
+    }
+
+    public boolean isParkedCar(Car car) {
+        boolean isParkedCar = false;
+        for (ParkingLot e:this.parkingLotList
+             ) {
+            isParkedCar= e.isContainCar(car);
+
+        }
+        return isParkedCar;
     }
 
     public List<ParkTicket> parkCarList(List<Car> carList) {
