@@ -53,16 +53,10 @@ public class ParkingBoy {
             if (!isParkedCar) {
                 boolean isCapacityEnough = isCapacityEnough();
                 if (isCapacityEnough) {
-                    if (this.parkingBoyName == ParingBoyName.SMART_PARKING_BOY.getValue()) {
-                        currentParingLot = findMoreEmptyOptionParkingLOt();
-                    }else if(this.parkingBoyName == ParingBoyName.SUPER_SMART_PARKING_BOY.getValue()){
-                        currentParingLot=findLargerPositonRatePraringLot();
-                    }
+                    findRightLotByParkingBoyName();
                     parkTicket=new ParkTicket();
-                    //关联ticket,与car,而且停车场添加ticket
                     parkTicket.setCarNumber(car.getCarNumber());
-                    currentParingLot.addParTicket(parkTicket);
-                    currentParingLot.addCar(car);
+                    addParkTicketAndCarIntoLot(car, parkTicket);
                 }else {
                     this.errorMessage=ErrorMessage.NOT_ENOUGH_CAPACITY_MESSAGE.getValue();
                 }
@@ -74,6 +68,19 @@ public class ParkingBoy {
 
 
         return parkTicket;
+    }
+
+    public void addParkTicketAndCarIntoLot(Car car, ParkTicket parkTicket) {
+        currentParingLot.addParTicket(parkTicket);
+        currentParingLot.addCar(car);
+    }
+
+    public void findRightLotByParkingBoyName() {
+        if (this.parkingBoyName == ParingBoyName.SMART_PARKING_BOY.getValue()) {
+            currentParingLot = findMoreEmptyOptionParkingLOt();
+        }else if(this.parkingBoyName == ParingBoyName.SUPER_SMART_PARKING_BOY.getValue()){
+            currentParingLot=findLargerPositonRatePraringLot();
+        }
     }
 
     public boolean isCapacityEnough() {
